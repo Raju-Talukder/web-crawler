@@ -3,6 +3,7 @@ from queue import Queue, Empty
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urljoin, urlparse
 import requests
+import argparse
 
 
 class MultiThreadedCrawler:
@@ -55,7 +56,20 @@ class MultiThreadedCrawler:
                 print(e)
                 continue
 
+    def get_arguments():
+        parser = argparse.ArgumentParser()
+        parser.add_argument("-u", "--url",
+                            dest="url",
+                            help="Base url of the web application.")
+        options = parser.parse_args()
+        if options.url:
+            return options.url
+        else:
+            parser.error("[!] Invalid Syntax. "
+                         "Use --help for more details.")
+
 
 if __name__ == '__main__':
-    cc = MultiThreadedCrawler("https://www.geeksforgeeks.org/")
+    url = MultiThreadedCrawler.get_arguments()
+    cc = MultiThreadedCrawler(url)
     cc.run_web_crawler()
